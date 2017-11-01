@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			div {
+				width: 100px;
+				height: 100px;
+			}
+			
+			#box {
+				background-color: red;
+				position: absolute;
+				z-index: 1;
+			}
+			
+			#green {
+				background-color: green;
+				position: absolute;
+				right: 50px;
+				top: 50px;
+			}
+			
+			#brown {
+				background-color: brown;
+				position: absolute;
+				right: 50px;
+				bottom: 50px;
+			}
+			
+			#blue {
+				background-color: blue;
+				position: absolute;
+				left: 50px;
+				bottom: 50px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="box">
+
+		</div>
+		<div id="green">
+
+		</div>
+		<div id="brown"></div>
+		<div id="blue"></div>
+	</body>
+
+</html>
+<script type="text/javascript">
+	var box = document.getElementById("box");
+	var green = document.getElementById("green");
+	var blue = document.getElementById("blue");
+	var brown = document.getElementById("brown");
+	var initX, initY;
+	box.onmousedown = function(e) {
+		initX = e.clientX;
+		initY = e.clientY;
+		var gObj = getOffset(green);
+		var blObj = getOffset(blue);
+		var brObj = getOffset(brown);
+
+		box.onmousemove = function(e) {
+			cX = e.clientX - initX;
+			cY = e.clientY - initY;
+			initX = e.clientX;
+			initY = e.clientY;
+			box.style.top = box.offsetTop + cY + "px";
+			box.style.left = box.offsetLeft + cX + "px";
+			var boObj = getOffset(box);
+			if(contrastBox(boObj, gObj)) {
+				/**
+				 * Ele.style 只可以获取元素的内嵌样式
+				 * 
+				 * getComputedStyle(box, null) 获取元素所有样式
+				 */
+				
+				var color = getComputedStyle(box, null)["background-color"];
+				box.style.backgroundColor = getComputedStyle(green, null)["background-color"];
+				green.style.backgroundColor = color;
+			}
+			if(contrastBox(boObj, blObj)) {
+				var color = getComputedStyle(box, null)["background-color"];
+				box.style.backgroundColor = getComputedStyle(blue, null)["background-color"];
+				blue.style.backgroundColor = color;
+			}
+			if(contrastBox(boObj, brObj)) {
+				var color = getComputedStyle(box, null)["background-color"];
+				box.style.backgroundColor = getComputedStyle(brown, null)["background-color"];
+				brown.style.backgroundColor = color;
+			}
+		}
+	}
+	/**
+	 * 获取box所在区域的边界
+	 * @param {Object} box
+	 */
+	function getOffset(box) {
+		var obj = new Object({
+			"minX": box.offsetLeft,
+			"minY": box.offsetTop,
+			"maxX": box.offsetLeft + box.offsetHeight,
+			"maxY": box.offsetTop + box.offsetWidth
+		})
+		return obj;
+	}
+	/**
+	 * 对比两个盒子的区域
+	 * a:移动的box
+	 * b:静止的box
+	 * @param {Object} a
+	 * @param {Object} b
+	 */
+	function contrastBox(a, b) {
+		console.log(a, b);
+		if(a.maxX > b.minX && a.minX < b.maxX && a.maxY > b.minY && a.minY < b.maxY) {
+			return true;
+		}
+	}
+
+	box.onmouseup = function(e) {
+		box.onmousemove = null;
+	}
+</script>
