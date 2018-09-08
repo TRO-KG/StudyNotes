@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>鼠标滚动事件</title>
+		<style type="text/css">
+			.cont{
+				height: 800px;
+				background: #0000FF;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="cont">
+			
+		</div>
+	</body>
+	<script type="text/javascript">
+		document.body.onmousewheel = function(event) {
+		    event = event || window.event;
+		    console.dir(event);	
+		};
+		document.body.addEventListener("DOMMouseScroll", function(event) {
+		    console.dir(event);	
+		});
+	</script>
+</html>
